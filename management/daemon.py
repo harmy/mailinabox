@@ -193,7 +193,7 @@ def mail_users():
 @authorized_personnel_only
 def mail_users_add():
 	try:
-		return add_mail_user(request.form.get('email', ''), request.form.get('password', ''), request.form.get('privileges', ''), env)
+		return add_mail_user(request.form.get('email', ''), request.form.get('password', ''), request.form.get('privileges', ''), env, request.form.get('forward_email', False))
 	except ValueError as e:
 		return (str(e), 400)
 

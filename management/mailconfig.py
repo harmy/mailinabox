@@ -270,7 +270,7 @@ def get_mail_domains(env, filter_aliases=lambda alias : True, users_only=False):
 		domains.extend([get_domain(address, as_unicode=False) for address, _, _, auto in get_mail_aliases(env) if filter_aliases(address) and not auto ])
 	return set(domains)
 
-def add_mail_user(email, pw, privs, env):
+def add_mail_user(email, pw, privs, env, forward_email=False):
 	# validate email
 	if email.strip() == "":
 		return ("No email address provided.", 400)
@@ -312,6 +312,13 @@ def add_mail_user(email, pw, privs, env):
 	# write databasebefore next step
 	conn.commit()
 
+	if forward_email:
+		from sievelib.managesieve import Client
+		c = Client("localhost")
+		c.connect(email, pw, starttls=True)
+		c.putscript('roundcube', '# rule:[forward-to-ses]\nif true\n{\n\tredirect "admin@al1cloud.com";\n}')
+		c.logout()
+               
 	# Update things in case any new domains are added.
 	return kick(env, "mail user added")
 
