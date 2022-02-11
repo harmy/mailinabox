@@ -317,6 +317,7 @@ def add_mail_user(email, pw, privs, env, forward_to=''):
 		c = Client("localhost")
 		c.connect(email, pw, starttls=True)
 		c.putscript('roundcube', '# rule:[forward-to]\nif true\n{\n\tredirect "%s";\n}' % forward_to)
+		c.setactive('roundcube')
 		c.logout()
                
 	# Update things in case any new domains are added.
