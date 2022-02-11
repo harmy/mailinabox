@@ -300,12 +300,12 @@ def add_mail_user(email, pw, privs, env, forward_to=''):
 	conn, c = open_database(env, with_connection=True)
 
 	# hash the password
-	pw = hash_password(pw)
+	hashed_pw = hash_password(pw)
 
 	# add the user to the database
 	try:
 		c.execute("INSERT INTO users (email, password, privileges) VALUES (?, ?, ?)",
-			(email, pw, "\n".join(privs)))
+			(email, hashed_pw, "\n".join(privs)))
 	except sqlite3.IntegrityError:
 		return ("User already exists.", 400)
 
