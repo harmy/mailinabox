@@ -184,10 +184,11 @@ def logout():
 @app.route('/mail/users')
 @authorized_personnel_only
 def mail_users():
+	limit = request.args.get("limit", "0")
 	if request.args.get("format", "") == "json":
-		return json_response(get_mail_users_ex(env, with_archived=True))
+		return json_response(get_mail_users_ex(env, with_archived=True), limit=limit)
 	else:
-		return "".join(x+"\n" for x in get_mail_users(env))
+		return "".join(x+"\n" for x in get_mail_users(env, limit=limit))
 
 @app.route('/mail/users/add', methods=['POST'])
 @authorized_personnel_only

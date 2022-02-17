@@ -98,14 +98,18 @@ def open_database(env, with_connection=False):
 	else:
 		return conn, conn.cursor()
 
-def get_mail_users(env):
+def get_mail_users(env, limit=0):
 	# Returns a flat, sorted list of all user accounts.
 	c = open_database(env)
-	c.execute('SELECT email FROM users')
+	if limit != 0:
+		sql = 'SELECT email FROM users order by RANDOM() limit {0}'.format(limit)
+	else:
+		sql = 'SELECT email FROM users'
+	c.execute(sql)
 	users = [ row[0] for row in c.fetchall() ]
 	return utils.sort_email_addresses(users, env)
 
-def get_mail_users_ex(env, with_archived=False):
+def get_mail_users_ex(env, with_archived=False, limit=0):
 	# Returns a complex data structure of all user accounts, optionally
 	# including archived (status="inactive") accounts.
 	#
@@ -128,6 +132,10 @@ def get_mail_users_ex(env, with_archived=False):
 	users = []
 	active_accounts = set()
 	c = open_database(env)
+	if limit != 0:
+		sql = 'SELECT email, privileges FROM users order by RANDOM() limit {0}'.format(limit)
+	else:
+		sql = 'SELECT email, privileges FROM users'
 	c.execute('SELECT email, privileges FROM users')
 	for email, privileges in c.fetchall():
 		active_accounts.add(email)
