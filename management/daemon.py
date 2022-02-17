@@ -186,7 +186,7 @@ def logout():
 def mail_users():
 	limit = request.args.get("limit", "0")
 	if request.args.get("format", "") == "json":
-		return json_response(get_mail_users_ex(env, with_archived=True), limit=limit)
+		return json_response(get_mail_users_ex(env, with_archived=True, limit=limit))
 	else:
 		return "".join(x+"\n" for x in get_mail_users(env, limit=limit))
 
