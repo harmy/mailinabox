@@ -184,7 +184,7 @@ def logout():
 @app.route('/mail/users')
 @authorized_personnel_only
 def mail_users():
-	limit = request.args.get("limit", "0")
+	limit = int(request.args.get("limit", "0"))
 	if request.args.get("format", "") == "json":
 		return json_response(get_mail_users_ex(env, with_archived=True, limit=limit))
 	else:
