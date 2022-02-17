@@ -136,7 +136,7 @@ def get_mail_users_ex(env, with_archived=False, limit=0):
 		sql = 'SELECT email, privileges FROM users order by RANDOM() limit {0}'.format(limit)
 	else:
 		sql = 'SELECT email, privileges FROM users'
-	c.execute('SELECT email, privileges FROM users')
+	c.execute(sql)
 	for email, privileges in c.fetchall():
 		active_accounts.add(email)
 
